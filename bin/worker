@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+require_relative '../lib/worker'
+require 'sneakers/runner'
+
+opts = {
+  amqp: (ENV['AMQP_URL'] || 'amqp://localhost:5672'),
+  daemonize: false,
+  workers: Integer(ENV['WORKER_CONCURRENCY'] || 4),
+  prefetch: Integer(ENV['WORKER_THREADS'] || 10),
+  threads: Integer(ENV['WORKER_THREADS'] || 10),
+}
+
+Sneakers.configure(opts)
+
+r = Sneakers::Runner.new([ Worker ])
+r.run
